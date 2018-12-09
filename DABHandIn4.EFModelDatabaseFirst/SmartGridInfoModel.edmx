@@ -1,0 +1,388 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SmartGridInfoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Adresse">
+          <Key>
+            <PropertyRef Name="AdresseId" />
+          </Key>
+          <Property Name="AdresseId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Vejnavn" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="Husnummer" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="Postnummer" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="Bynavn" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="SmartEnhedId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Elkilde">
+          <Key>
+            <PropertyRef Name="ElkildeId" />
+          </Key>
+          <Property Name="ElkildeId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Har">
+          <Key>
+            <PropertyRef Name="SmartEnhedId" />
+            <PropertyRef Name="ElkildeId" />
+          </Key>
+          <Property Name="SmartEnhedId" Type="bigint" Nullable="false" />
+          <Property Name="ElkildeId" Type="bigint" Nullable="false" />
+          <Property Name="Antal" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SmartEnhed">
+          <Key>
+            <PropertyRef Name="SmartEnhedId" />
+          </Key>
+          <Property Name="SmartEnhedId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProsumerId" Type="bigint" Nullable="false" />
+          <Property Name="SmartMeterId" Type="bigint" Nullable="false" />
+          <Property Name="TypeId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SmartMeter">
+          <Key>
+            <PropertyRef Name="SmartMeterId" />
+          </Key>
+          <Property Name="SmartMeterId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Type">
+          <Key>
+            <PropertyRef Name="TypeId" />
+          </Key>
+          <Property Name="TypeId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeNavn" Type="varchar" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_Adresse">
+          <End Role="SmartEnhed" Type="Self.SmartEnhed" Multiplicity="1" />
+          <End Role="Adresse" Type="Self.Adresse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SmartEnhed">
+              <PropertyRef Name="SmartEnhedId" />
+            </Principal>
+            <Dependent Role="Adresse">
+              <PropertyRef Name="SmartEnhedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Har">
+          <End Role="SmartEnhed" Type="Self.SmartEnhed" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Har" Type="Self.Har" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SmartEnhed">
+              <PropertyRef Name="SmartEnhedId" />
+            </Principal>
+            <Dependent Role="Har">
+              <PropertyRef Name="SmartEnhedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Har2">
+          <End Role="Elkilde" Type="Self.Elkilde" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Har" Type="Self.Har" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Elkilde">
+              <PropertyRef Name="ElkildeId" />
+            </Principal>
+            <Dependent Role="Har">
+              <PropertyRef Name="ElkildeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_SmartEnhed">
+          <End Role="SmartMeter" Type="Self.SmartMeter" Multiplicity="1" />
+          <End Role="SmartEnhed" Type="Self.SmartEnhed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SmartMeter">
+              <PropertyRef Name="SmartMeterId" />
+            </Principal>
+            <Dependent Role="SmartEnhed">
+              <PropertyRef Name="SmartMeterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_SmartEnhed2">
+          <End Role="Type" Type="Self.Type" Multiplicity="1" />
+          <End Role="SmartEnhed" Type="Self.SmartEnhed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Type">
+              <PropertyRef Name="TypeId" />
+            </Principal>
+            <Dependent Role="SmartEnhed">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SmartGridInfoModelStoreContainer">
+          <EntitySet Name="Adresse" EntityType="Self.Adresse" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Elkilde" EntityType="Self.Elkilde" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Har" EntityType="Self.Har" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SmartEnhed" EntityType="Self.SmartEnhed" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SmartMeter" EntityType="Self.SmartMeter" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Type" EntityType="Self.Type" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_Adresse" Association="Self.fk_Adresse">
+            <End Role="SmartEnhed" EntitySet="SmartEnhed" />
+            <End Role="Adresse" EntitySet="Adresse" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Har" Association="Self.fk_Har">
+            <End Role="SmartEnhed" EntitySet="SmartEnhed" />
+            <End Role="Har" EntitySet="Har" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Har2" Association="Self.fk_Har2">
+            <End Role="Elkilde" EntitySet="Elkilde" />
+            <End Role="Har" EntitySet="Har" />
+          </AssociationSet>
+          <AssociationSet Name="fk_SmartEnhed" Association="Self.fk_SmartEnhed">
+            <End Role="SmartMeter" EntitySet="SmartMeter" />
+            <End Role="SmartEnhed" EntitySet="SmartEnhed" />
+          </AssociationSet>
+          <AssociationSet Name="fk_SmartEnhed2" Association="Self.fk_SmartEnhed2">
+            <End Role="Type" EntitySet="Type" />
+            <End Role="SmartEnhed" EntitySet="SmartEnhed" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SmartGridInfoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Adresse">
+          <Key>
+            <PropertyRef Name="AdresseId" />
+          </Key>
+          <Property Name="AdresseId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Vejnavn" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Husnummer" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Postnummer" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="Bynavn" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="SmartEnhedId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="SmartEnhed" Relationship="Self.fk_Adresse" FromRole="Adresse" ToRole="SmartEnhed" />
+        </EntityType>
+        <EntityType Name="Elkilde">
+          <Key>
+            <PropertyRef Name="ElkildeId" />
+          </Key>
+          <Property Name="ElkildeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Hars" Relationship="Self.fk_Har2" FromRole="Elkilde" ToRole="Har" />
+        </EntityType>
+        <EntityType Name="Har">
+          <Key>
+            <PropertyRef Name="SmartEnhedId" />
+            <PropertyRef Name="ElkildeId" />
+          </Key>
+          <Property Name="SmartEnhedId" Type="Int64" Nullable="false" />
+          <Property Name="ElkildeId" Type="Int64" Nullable="false" />
+          <Property Name="Antal" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Elkilde" Relationship="Self.fk_Har2" FromRole="Har" ToRole="Elkilde" />
+          <NavigationProperty Name="SmartEnhed" Relationship="Self.fk_Har" FromRole="Har" ToRole="SmartEnhed" />
+        </EntityType>
+        <EntityType Name="SmartEnhed">
+          <Key>
+            <PropertyRef Name="SmartEnhedId" />
+          </Key>
+          <Property Name="SmartEnhedId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProsumerId" Type="Int64" Nullable="false" />
+          <Property Name="SmartMeterId" Type="Int64" Nullable="false" />
+          <Property Name="TypeId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Adresses" Relationship="Self.fk_Adresse" FromRole="SmartEnhed" ToRole="Adresse" />
+          <NavigationProperty Name="Hars" Relationship="Self.fk_Har" FromRole="SmartEnhed" ToRole="Har" />
+          <NavigationProperty Name="SmartMeter" Relationship="Self.fk_SmartEnhed" FromRole="SmartEnhed" ToRole="SmartMeter" />
+          <NavigationProperty Name="Type" Relationship="Self.fk_SmartEnhed2" FromRole="SmartEnhed" ToRole="Type" />
+        </EntityType>
+        <EntityType Name="SmartMeter">
+          <Key>
+            <PropertyRef Name="SmartMeterId" />
+          </Key>
+          <Property Name="SmartMeterId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="SmartEnheds" Relationship="Self.fk_SmartEnhed" FromRole="SmartMeter" ToRole="SmartEnhed" />
+        </EntityType>
+        <EntityType Name="Type">
+          <Key>
+            <PropertyRef Name="TypeId" />
+          </Key>
+          <Property Name="TypeId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeNavn" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="SmartEnheds" Relationship="Self.fk_SmartEnhed2" FromRole="Type" ToRole="SmartEnhed" />
+        </EntityType>
+        <Association Name="fk_Adresse">
+          <End Role="SmartEnhed" Type="Self.SmartEnhed" Multiplicity="1" />
+          <End Role="Adresse" Type="Self.Adresse" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SmartEnhed">
+              <PropertyRef Name="SmartEnhedId" />
+            </Principal>
+            <Dependent Role="Adresse">
+              <PropertyRef Name="SmartEnhedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Har2">
+          <End Role="Elkilde" Type="Self.Elkilde" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Har" Type="Self.Har" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Elkilde">
+              <PropertyRef Name="ElkildeId" />
+            </Principal>
+            <Dependent Role="Har">
+              <PropertyRef Name="ElkildeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Har">
+          <End Role="SmartEnhed" Type="Self.SmartEnhed" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Har" Type="Self.Har" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SmartEnhed">
+              <PropertyRef Name="SmartEnhedId" />
+            </Principal>
+            <Dependent Role="Har">
+              <PropertyRef Name="SmartEnhedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_SmartEnhed">
+          <End Role="SmartMeter" Type="Self.SmartMeter" Multiplicity="1" />
+          <End Role="SmartEnhed" Type="Self.SmartEnhed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SmartMeter">
+              <PropertyRef Name="SmartMeterId" />
+            </Principal>
+            <Dependent Role="SmartEnhed">
+              <PropertyRef Name="SmartMeterId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_SmartEnhed2">
+          <End Role="Type" Type="Self.Type" Multiplicity="1" />
+          <End Role="SmartEnhed" Type="Self.SmartEnhed" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Type">
+              <PropertyRef Name="TypeId" />
+            </Principal>
+            <Dependent Role="SmartEnhed">
+              <PropertyRef Name="TypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DAB4Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Adresses" EntityType="Self.Adresse" />
+          <EntitySet Name="Elkildes" EntityType="Self.Elkilde" />
+          <EntitySet Name="Hars" EntityType="Self.Har" />
+          <EntitySet Name="SmartEnheds" EntityType="Self.SmartEnhed" />
+          <EntitySet Name="SmartMeters" EntityType="Self.SmartMeter" />
+          <EntitySet Name="Types" EntityType="Self.Type" />
+          <AssociationSet Name="fk_Adresse" Association="Self.fk_Adresse">
+            <End Role="SmartEnhed" EntitySet="SmartEnheds" />
+            <End Role="Adresse" EntitySet="Adresses" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Har2" Association="Self.fk_Har2">
+            <End Role="Elkilde" EntitySet="Elkildes" />
+            <End Role="Har" EntitySet="Hars" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Har" Association="Self.fk_Har">
+            <End Role="SmartEnhed" EntitySet="SmartEnheds" />
+            <End Role="Har" EntitySet="Hars" />
+          </AssociationSet>
+          <AssociationSet Name="fk_SmartEnhed" Association="Self.fk_SmartEnhed">
+            <End Role="SmartMeter" EntitySet="SmartMeters" />
+            <End Role="SmartEnhed" EntitySet="SmartEnheds" />
+          </AssociationSet>
+          <AssociationSet Name="fk_SmartEnhed2" Association="Self.fk_SmartEnhed2">
+            <End Role="Type" EntitySet="Types" />
+            <End Role="SmartEnhed" EntitySet="SmartEnheds" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SmartGridInfoModelStoreContainer" CdmEntityContainer="DAB4Entities">
+          <EntitySetMapping Name="Adresses">
+            <EntityTypeMapping TypeName="SmartGridInfoModel.Adresse">
+              <MappingFragment StoreEntitySet="Adresse">
+                <ScalarProperty Name="AdresseId" ColumnName="AdresseId" />
+                <ScalarProperty Name="Vejnavn" ColumnName="Vejnavn" />
+                <ScalarProperty Name="Husnummer" ColumnName="Husnummer" />
+                <ScalarProperty Name="Postnummer" ColumnName="Postnummer" />
+                <ScalarProperty Name="Bynavn" ColumnName="Bynavn" />
+                <ScalarProperty Name="SmartEnhedId" ColumnName="SmartEnhedId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Elkildes">
+            <EntityTypeMapping TypeName="SmartGridInfoModel.Elkilde">
+              <MappingFragment StoreEntitySet="Elkilde">
+                <ScalarProperty Name="ElkildeId" ColumnName="ElkildeId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Hars">
+            <EntityTypeMapping TypeName="SmartGridInfoModel.Har">
+              <MappingFragment StoreEntitySet="Har">
+                <ScalarProperty Name="SmartEnhedId" ColumnName="SmartEnhedId" />
+                <ScalarProperty Name="ElkildeId" ColumnName="ElkildeId" />
+                <ScalarProperty Name="Antal" ColumnName="Antal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SmartEnheds">
+            <EntityTypeMapping TypeName="SmartGridInfoModel.SmartEnhed">
+              <MappingFragment StoreEntitySet="SmartEnhed">
+                <ScalarProperty Name="SmartEnhedId" ColumnName="SmartEnhedId" />
+                <ScalarProperty Name="ProsumerId" ColumnName="ProsumerId" />
+                <ScalarProperty Name="SmartMeterId" ColumnName="SmartMeterId" />
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SmartMeters">
+            <EntityTypeMapping TypeName="SmartGridInfoModel.SmartMeter">
+              <MappingFragment StoreEntitySet="SmartMeter">
+                <ScalarProperty Name="SmartMeterId" ColumnName="SmartMeterId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Types">
+            <EntityTypeMapping TypeName="SmartGridInfoModel.Type">
+              <MappingFragment StoreEntitySet="Type">
+                <ScalarProperty Name="TypeId" ColumnName="TypeId" />
+                <ScalarProperty Name="TypeNavn" ColumnName="TypeNavn" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

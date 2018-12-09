@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ProsumerInfoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Forbrug">
+          <Key>
+            <PropertyRef Name="ForbrugId" />
+          </Key>
+          <Property Name="ForbrugId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AarligkWh" Type="int" Nullable="false" />
+          <Property Name="Kvartal1kWh" Type="int" />
+          <Property Name="Kvartal2kWh" Type="int" />
+          <Property Name="Kvartal3kWh" Type="int" />
+          <Property Name="Kvartal4kWh" Type="int" />
+          <Property Name="Aarstal" Type="datetime" Nullable="false" />
+          <Property Name="ProsumerId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PersonAntal">
+          <Key>
+            <PropertyRef Name="PersonAntalId" />
+          </Key>
+          <Property Name="PersonAntalId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AntalVoksne" Type="int" Nullable="false" />
+          <Property Name="ProsumerId" Type="bigint" />
+        </EntityType>
+        <EntityType Name="Prosumer">
+          <Key>
+            <PropertyRef Name="ProsumerId" />
+          </Key>
+          <Property Name="ProsumerId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SmartEnhedId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <Association Name="fk_Forbrug">
+          <End Role="Prosumer" Type="Self.Prosumer" Multiplicity="1" />
+          <End Role="Forbrug" Type="Self.Forbrug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Prosumer">
+              <PropertyRef Name="ProsumerId" />
+            </Principal>
+            <Dependent Role="Forbrug">
+              <PropertyRef Name="ProsumerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_PersonAntal">
+          <End Role="Prosumer" Type="Self.Prosumer" Multiplicity="0..1" />
+          <End Role="PersonAntal" Type="Self.PersonAntal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Prosumer">
+              <PropertyRef Name="ProsumerId" />
+            </Principal>
+            <Dependent Role="PersonAntal">
+              <PropertyRef Name="ProsumerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProsumerInfoModelStoreContainer">
+          <EntitySet Name="Forbrug" EntityType="Self.Forbrug" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PersonAntal" EntityType="Self.PersonAntal" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Prosumer" EntityType="Self.Prosumer" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="fk_Forbrug" Association="Self.fk_Forbrug">
+            <End Role="Prosumer" EntitySet="Prosumer" />
+            <End Role="Forbrug" EntitySet="Forbrug" />
+          </AssociationSet>
+          <AssociationSet Name="fk_PersonAntal" Association="Self.fk_PersonAntal">
+            <End Role="Prosumer" EntitySet="Prosumer" />
+            <End Role="PersonAntal" EntitySet="PersonAntal" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ProsumerInfoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Forbrug">
+          <Key>
+            <PropertyRef Name="ForbrugId" />
+          </Key>
+          <Property Name="ForbrugId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AarligkWh" Type="Int32" Nullable="false" />
+          <Property Name="Kvartal1kWh" Type="Int32" />
+          <Property Name="Kvartal2kWh" Type="Int32" />
+          <Property Name="Kvartal3kWh" Type="Int32" />
+          <Property Name="Kvartal4kWh" Type="Int32" />
+          <Property Name="Aarstal" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ProsumerId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Prosumer" Relationship="Self.fk_Forbrug" FromRole="Forbrug" ToRole="Prosumer" />
+        </EntityType>
+        <EntityType Name="PersonAntal">
+          <Key>
+            <PropertyRef Name="PersonAntalId" />
+          </Key>
+          <Property Name="PersonAntalId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AntalVoksne" Type="Int32" Nullable="false" />
+          <Property Name="ProsumerId" Type="Int64" />
+          <NavigationProperty Name="Prosumer" Relationship="Self.fk_PersonAntal" FromRole="PersonAntal" ToRole="Prosumer" />
+        </EntityType>
+        <EntityType Name="Prosumer">
+          <Key>
+            <PropertyRef Name="ProsumerId" />
+          </Key>
+          <Property Name="ProsumerId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SmartEnhedId" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="Forbrugs" Relationship="Self.fk_Forbrug" FromRole="Prosumer" ToRole="Forbrug" />
+          <NavigationProperty Name="PersonAntals" Relationship="Self.fk_PersonAntal" FromRole="Prosumer" ToRole="PersonAntal" />
+        </EntityType>
+        <Association Name="fk_Forbrug">
+          <End Role="Prosumer" Type="Self.Prosumer" Multiplicity="1" />
+          <End Role="Forbrug" Type="Self.Forbrug" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Prosumer">
+              <PropertyRef Name="ProsumerId" />
+            </Principal>
+            <Dependent Role="Forbrug">
+              <PropertyRef Name="ProsumerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_PersonAntal">
+          <End Role="Prosumer" Type="Self.Prosumer" Multiplicity="0..1" />
+          <End Role="PersonAntal" Type="Self.PersonAntal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Prosumer">
+              <PropertyRef Name="ProsumerId" />
+            </Principal>
+            <Dependent Role="PersonAntal">
+              <PropertyRef Name="ProsumerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ProsumerInfoEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Forbrugs" EntityType="Self.Forbrug" />
+          <EntitySet Name="PersonAntals" EntityType="Self.PersonAntal" />
+          <EntitySet Name="Prosumers" EntityType="Self.Prosumer" />
+          <AssociationSet Name="fk_Forbrug" Association="Self.fk_Forbrug">
+            <End Role="Prosumer" EntitySet="Prosumers" />
+            <End Role="Forbrug" EntitySet="Forbrugs" />
+          </AssociationSet>
+          <AssociationSet Name="fk_PersonAntal" Association="Self.fk_PersonAntal">
+            <End Role="Prosumer" EntitySet="Prosumers" />
+            <End Role="PersonAntal" EntitySet="PersonAntals" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ProsumerInfoModelStoreContainer" CdmEntityContainer="ProsumerInfoEntities">
+          <EntitySetMapping Name="Forbrugs">
+            <EntityTypeMapping TypeName="ProsumerInfoModel.Forbrug">
+              <MappingFragment StoreEntitySet="Forbrug">
+                <ScalarProperty Name="ForbrugId" ColumnName="ForbrugId" />
+                <ScalarProperty Name="AarligkWh" ColumnName="AarligkWh" />
+                <ScalarProperty Name="Kvartal1kWh" ColumnName="Kvartal1kWh" />
+                <ScalarProperty Name="Kvartal2kWh" ColumnName="Kvartal2kWh" />
+                <ScalarProperty Name="Kvartal3kWh" ColumnName="Kvartal3kWh" />
+                <ScalarProperty Name="Kvartal4kWh" ColumnName="Kvartal4kWh" />
+                <ScalarProperty Name="Aarstal" ColumnName="Aarstal" />
+                <ScalarProperty Name="ProsumerId" ColumnName="ProsumerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PersonAntals">
+            <EntityTypeMapping TypeName="ProsumerInfoModel.PersonAntal">
+              <MappingFragment StoreEntitySet="PersonAntal">
+                <ScalarProperty Name="PersonAntalId" ColumnName="PersonAntalId" />
+                <ScalarProperty Name="AntalVoksne" ColumnName="AntalVoksne" />
+                <ScalarProperty Name="ProsumerId" ColumnName="ProsumerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Prosumers">
+            <EntityTypeMapping TypeName="ProsumerInfoModel.Prosumer">
+              <MappingFragment StoreEntitySet="Prosumer">
+                <ScalarProperty Name="ProsumerId" ColumnName="ProsumerId" />
+                <ScalarProperty Name="SmartEnhedId" ColumnName="SmartEnhedId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
